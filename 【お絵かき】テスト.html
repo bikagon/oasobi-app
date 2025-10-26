@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>【プロト版】お絵かきアプリ</title>
+  <link rel="stylesheet" href="お絵かき.css">
+  <style>
+    #canvas {/* Canvasの枠線を見やすくするために設定 */
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>やさしいお絵かきクイズ🎨</h1>
+  <div id="role-selector">
+    <button onclick="setRole('drawer')">描く人</button>
+    <button onclick="setRole('guesser')">答える人</button>
+  </div>
+
+  <div id="drawer-ui" style="display:none;">
+    <p>あなたのテーマは：<strong id="theme-text"></strong></p>
+    <button id="new-theme-btn">別のお題を表示する</button>
+  </div>
+
+  <p id="timer-text">残り時間：<span id="time">30</span>秒</p>
+
+  <label for="color-picker">線の色：</label>
+  <input type="color" id="color-picker" value="#8b5e3c">
+
+  <div id="quiz-container" style="display:none;">
+    <h2 id="question">この絵は何を描いているでしょう？</h2>
+    <input type="text" id="answer-input" placeholder="答えを入力してください" />
+    <button id="submit-btn">答える</button>
+    <p id="result"></p>
+  </div>
+
+  <div class="canvas-area">
+    <canvas id="canvas" width="500" height="400"></canvas>
+    <div class="canvas-controls">
+      <button id="resetButton">リセット</button>
+    </div>
+  </div>
+
+  <script src="お絵かきスクリプト.js"></script>
+</body>
+</html>
