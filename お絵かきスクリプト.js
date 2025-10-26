@@ -117,3 +117,30 @@ canvas.addEventListener('mouseleave', () => {
 document.getElementById("resetButton").addEventListener('click', () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
+
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+  drawing = true;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+});
+
+canvas.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  if (!drawing) return;
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+  ctx.lineTo(x, y);
+  ctx.stroke();
+});
+
+canvas.addEventListener('touchend', () => {
+  drawing = false;
+});
+
