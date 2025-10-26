@@ -1,8 +1,12 @@
-const quizThemes = ["ケーキ", "りんご", "パン", "おにぎり", "アイス","くま", "ねこ", "いぬ", "うさぎ", "ぞう","カフェラテ", "ジュース", "おちゃ", "ココア", "ミルク"]
+const quizThemes = [
+  "ケーキ", "りんご", "パン", "おにぎり", "アイス",
+  "くま", "ねこ", "いぬ", "うさぎ", "ぞう",
+  "カフェラテ", "ジュース", "おちゃ", "ココア", "ミルク"
+];
 let selectedTheme = "";
 
-const drawerTimeLimit = 60;   // 描く人の制限時間（秒）
-const guesserTimeLimit = 30;  // 答える人の制限時間（秒）
+const drawerTimeLimit = 60;
+const guesserTimeLimit = 30;
 let timer;
 
 // キャンバスと色設定
@@ -29,7 +33,7 @@ function startTimer(seconds, onTimeout) {
   let time = seconds;
   const timeDisplay = document.getElementById("time");
   timeDisplay.textContent = time;
-  timeDisplay.style.color = "#5c4b3b"; // 初期色
+  timeDisplay.style.color = "#5c4b3b";
 
   clearInterval(timer);
   timer = setInterval(() => {
@@ -37,7 +41,7 @@ function startTimer(seconds, onTimeout) {
     timeDisplay.textContent = time;
 
     if (time <= 10) {
-      timeDisplay.style.color = "#d94f4f"; // 注意色
+      timeDisplay.style.color = "#d94f4f";
     }
 
     if (time <= 0) {
@@ -51,6 +55,7 @@ function startTimer(seconds, onTimeout) {
 function setRole(role) {
   clearInterval(timer);
   document.getElementById("submit-btn").disabled = false;
+  document.getElementById("time").style.color = "#5c4b3b";
 
   if (role === "drawer") {
     selectedTheme = getRandomTheme();
@@ -90,57 +95,61 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   }
 });
 
-// 描画処理
+// 描画処理（PC & スマホ対応）
 let drawing = false;
 
-canvas.addEventListener('mousedown', (e) => {
+function getCanvasCoordinates(e) {
+  const rect = canvas.getBoundingClientRect();
+  if (e.touches) {
+    const touch = e.touches[0];
+    return {
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top
+    };
+  } else {
+    return {
+      x: e.offsetX,
+      y: e.offsetY
+    };
+  }
+}
+
+function startDrawing(e) {
   drawing = true;
+  const { x, y } = getCanvasCoordinates(e);
   ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
-});
+  ctx.moveTo(x, y);
+}
 
-canvas.addEventListener('mousemove', (e) => {
+function draw(e) {
   if (!drawing) return;
-  ctx.lineTo(e.offsetX, e.offsetY);
+  const { x, y } = getCanvasCoordinates(e);
+  ctx.lineTo(x, y);
   ctx.stroke();
-});
+}
 
-canvas.addEventListener('mouseup', () => {
+function stopDrawing() {
   drawing = false;
-});
+}
 
-canvas.addEventListener('mouseleave', () => {
-  drawing = false;
+// PCイベント
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mouseleave', stopDrawing);
+
+// スマホイベント
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  startDrawing(e);
 });
+canvas.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  draw(e);
+});
+canvas.addEventListener('touchend', stopDrawing);
 
 // リセットボタン
 document.getElementById("resetButton").addEventListener('click', () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
-
-canvas.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  const touch = e.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-});
-
-canvas.addEventListener('touchmove', (e) => {
-  e.preventDefault();
-  if (!drawing) return;
-  const touch = e.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
-  ctx.lineTo(x, y);
-  ctx.stroke();
-});
-
-canvas.addEventListener('touchend', () => {
-  drawing = false;
-});
-
