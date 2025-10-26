@@ -86,43 +86,49 @@ input[type="text"] {
 #timer-text {
   font-size: 18px;
   margin: 10px 0;
+  transition: color 0.5s ease;
 }
 
 /* スマホ対応 */
 @media screen and (max-width: 600px) {
   body {
     padding: 10px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 22px;
+  }
+
+  #canvas {
+    width: 100%;
+    height: auto;
   }
 
   .canvas-area {
     flex-direction: column;
     align-items: center;
-  }
-
-  .canvas-controls {
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 10px;
     gap: 10px;
   }
 
   input[type="text"] {
     width: 100%;
-    font-size: 14px;
+    font-size: 16px;
+    padding: 10px;
   }
 
   button {
-    font-size: 14px;
-    padding: 8px 16px;
+    font-size: 16px;
+    padding: 10px 20px;
   }
 
   #timer-text {
-    font-size: 16px;
-    transition: color 0.5s ease;
+    font-size: 18px;
+  }
+
+  #color-picker {
+    width: 100%;
+    margin-top: 10px;
   }
 }
+
